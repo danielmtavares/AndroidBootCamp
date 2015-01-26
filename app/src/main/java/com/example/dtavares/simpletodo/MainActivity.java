@@ -24,6 +24,7 @@ public class MainActivity extends ActionBarActivity {
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     ListView lvItems;
+    private final int REQUEST_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +57,31 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapter,
                                                    View item, int pos, long id) {
-                        Log.d("SimpleTodo", "MainActivity.OnItemClick called");
                         Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                        startActivity(i);
+                        i.putExtra("itemText", items.get(pos));
+                        i.putExtra("pos", pos);
+                        startActivityForResult(i, REQUEST_CODE);
                     }
                 }
         );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            Bundle extras = data.getExtras();
+            int pos = extras.getInt("pos");
+            if (pos == Integer.MAX_VALUE) {
+                return;
+            }
+
+            String itemText = extras.getString("itemText");
+            String currentItemText = items.get(pos);
+
+            items.set(pos, itemText);
+            itemsAdapter.notifyDataSetChanged();
+            writeItems();
+        }
     }
 
     private void readItems() {

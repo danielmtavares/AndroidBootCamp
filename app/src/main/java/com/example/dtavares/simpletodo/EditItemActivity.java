@@ -1,24 +1,37 @@
 package com.example.dtavares.simpletodo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 
 public class EditItemActivity extends Activity {
+    int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
+
+        EditText etItem = (EditText) findViewById(R.id.edText);
+        String itemText = getIntent().getStringExtra("itemText");
+        etItem.setText(itemText);
+
+        pos = getIntent().getIntExtra("pos", Integer.MAX_VALUE);
     }
 
     public void onSubmit(View v) {
-        Log.d("SimpleTodo", "EditItemActivity.onSubmit called");
-        this.finish();
+        EditText etItem = (EditText) findViewById(R.id.edText);
+        Intent data = new Intent();
+        data.putExtra("itemText", etItem.getText().toString());
+        data.putExtra("pos", pos);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override
