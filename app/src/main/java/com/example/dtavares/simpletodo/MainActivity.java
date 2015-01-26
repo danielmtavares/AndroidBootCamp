@@ -1,7 +1,9 @@
 package com.example.dtavares.simpletodo;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.ListView;
 
 import org.apache.commons.io.FileUtils;
 
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +47,18 @@ public class MainActivity extends ActionBarActivity {
                         itemsAdapter.notifyDataSetChanged();
                         writeItems();
                         return true;
+                    }
+                }
+        );
+
+        lvItems.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapter,
+                                                   View item, int pos, long id) {
+                        Log.d("SimpleTodo", "MainActivity.OnItemClick called");
+                        Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+                        startActivity(i);
                     }
                 }
         );
