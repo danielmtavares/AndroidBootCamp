@@ -10,7 +10,7 @@ Required User Stories:
 
 For each photo displayed, user can see the following details:
 - [x] Graphic, Caption, Username
-- [ ] (Optional) relative timestamp, like count, user profile image
+- [ ] Relative timestamp, like count, user profile image (Optional)
 
 
 Optional Advanced User Stories:
