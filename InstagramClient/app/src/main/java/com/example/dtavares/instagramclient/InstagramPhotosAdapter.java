@@ -1,6 +1,7 @@
 package com.example.dtavares.instagramclient;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,15 +34,29 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         }
 
         // Lookup the views for populating the data (image, caption)
+        TextView tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
+        TextView tvTimestamp = (TextView) convertView.findViewById(R.id.tvTimestamp);
         TextView tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
+        TextView tvLikesCount = (TextView) convertView.findViewById(R.id.tvLikesCount);
+        ImageView ivProfilePicture = (ImageView) convertView.findViewById(R.id.ivProfilePicture);
         ImageView ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
 
         // Insert the model data into each of the view items
-        tvCaption.setText(photo.username + ": " + photo.caption);
+        tvUsername.setText(photo.username);
+        tvCaption.setText(photo.caption);
+        tvLikesCount.setText(Integer.toString(photo.likesCount));
+
+        CharSequence relativeTimestamp = DateUtils.getRelativeTimeSpanString(photo.createdTime * 1000,
+                System.currentTimeMillis(), 0);
+        tvTimestamp.setText(relativeTimestamp);
+
+        ivProfilePicture.setImageResource(0);
+        RequestCreator profilePicture = Picasso.with(getContext()).load(photo.profilePicture);
+        profilePicture.into(ivProfilePicture);
 
         ivPhoto.setImageResource(0);
-        RequestCreator creator = Picasso.with(getContext()).load(photo.imageUrl);
-        creator.fit().centerCrop().placeholder(R.drawable.ic_launcher).into(ivPhoto);
+        RequestCreator photoCreator = Picasso.with(getContext()).load(photo.imageUrl);
+        photoCreator.fit().centerCrop().placeholder(R.drawable.ic_launcher).into(ivPhoto);
 
         return convertView;
     }
