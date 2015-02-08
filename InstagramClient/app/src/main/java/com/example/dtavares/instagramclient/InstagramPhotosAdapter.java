@@ -52,7 +52,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
 
         ivProfilePicture.setImageResource(0);
         RequestCreator profilePicture = Picasso.with(getContext()).load(photo.profilePicture);
-        profilePicture.into(ivProfilePicture);
+        profilePicture.transform(new CircleTransform()).into(ivProfilePicture);
 
         ivPhoto.setImageResource(0);
         RequestCreator photoCreator = Picasso.with(getContext()).load(photo.imageUrl);
