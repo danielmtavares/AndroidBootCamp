@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makeramen.RoundedImageView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -38,7 +39,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         TextView tvTimestamp = (TextView) convertView.findViewById(R.id.tvTimestamp);
         TextView tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
         TextView tvLikesCount = (TextView) convertView.findViewById(R.id.tvLikesCount);
-        ImageView ivProfilePicture = (ImageView) convertView.findViewById(R.id.ivProfilePicture);
+        RoundedImageView ivProfilePicture = (RoundedImageView) convertView.findViewById(R.id.ivProfilePicture);
         ImageView ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
 
         // Insert the model data into each of the view items
@@ -51,8 +52,9 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         tvTimestamp.setText(relativeTimestamp);
 
         ivProfilePicture.setImageResource(0);
-        RequestCreator profilePicture = Picasso.with(getContext()).load(photo.profilePicture);
-        profilePicture.transform(new CircleTransform()).into(ivProfilePicture);
+        Picasso.with(getContext())
+                .load(photo.profilePicture)
+                .into(ivProfilePicture);
 
         ivPhoto.setImageResource(0);
         RequestCreator photoCreator = Picasso.with(getContext()).load(photo.imageUrl);

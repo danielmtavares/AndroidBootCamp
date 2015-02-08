@@ -63,7 +63,9 @@ public class PhotosActivity extends ActionBarActivity {
                         photo.username = userObject.getString("username");
                         photo.profilePicture = userObject.getString("profile_picture");
                         photo.createdTime = photoJSON.getInt("created_time");
-                        photo.caption = photoJSON.getJSONObject("caption").getString("text");
+
+                        JSONObject captionObject = photoJSON.optJSONObject("caption");
+                        photo.caption = (captionObject != null) ? captionObject.getString("text") : "";
 
                         JSONObject imagesObject = photoJSON.getJSONObject("images");
                         JSONObject standardResolutionObject = imagesObject.getJSONObject("standard_resolution");
