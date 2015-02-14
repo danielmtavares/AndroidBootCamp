@@ -44,6 +44,11 @@ public class SearchActivity extends ActionBarActivity {
         imageResults = new ArrayList<>();
         aImageResults = new ImageResultsAdapter(this, imageResults);
         gvResults.setAdapter(aImageResults);
+
+        imageSizeFilter = "";
+        colorFilter = "";
+        imageTypeFilter = "";
+        siteFilter = "";
     }
 
     private void setupViews() {
