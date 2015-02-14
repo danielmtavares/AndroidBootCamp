@@ -4,7 +4,7 @@ Project 2: Grid Image Search
 **Overview:** This is a Google Image Search app which allows a user to select search filters and
 paginate results infinitely.
 
-Time spent: ? hours spent in total (3 hours so far)
+Time spent: 6 hours so far
 
 User Stories:
 -------------
