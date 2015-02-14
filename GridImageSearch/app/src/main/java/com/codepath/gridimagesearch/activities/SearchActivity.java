@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 
-import com.codepath.gridimagesearch.ImageDisplayActivity;
 import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.adapters.ImageResultsAdapter;
 import com.codepath.gridimagesearch.models.ImageResult;
@@ -27,10 +26,15 @@ import java.util.ArrayList;
 
 
 public class SearchActivity extends ActionBarActivity {
+    private static final int REQUEST_FILTERS = 111;
     private EditText etQuery;
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
+    private String imageSizeFilter;
+    private String colorFilter;
+    private String imageTypeFilter;
+    private String siteFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,18 @@ public class SearchActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_FILTERS) {
+            Bundle extras = data.getExtras();
+
+            imageSizeFilter = extras.getString("image_size");
+            colorFilter = extras.getString("color_filter");
+            imageTypeFilter = extras.getString("image_type");
+            siteFilter = extras.getString("site_filter");
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);
@@ -72,16 +88,44 @@ public class SearchActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(SearchActivity.this, AdvancedFiltersActivity.class);
+            intent.putExtra("image_size", imageSizeFilter);
+            intent.putExtra("color_filter", colorFilter);
+            intent.putExtra("image_type", imageTypeFilter);
+            intent.putExtra("site_filter", siteFilter);
+
+            startActivityForResult(intent, REQUEST_FILTERS);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void onImageSearch(View v) {
+    public void onImageSearch(View view) {
         String query = etQuery.getText().toString();
+        if (query.isEmpty()) {
+            return;
+        }
+
         AsyncHttpClient client = new AsyncHttpClient();
-        String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8";
+        String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0" +
+                "&q=" + query + "&rsz=8";
+
+        if (!imageSizeFilter.isEmpty()) {
+            searchUrl += "&imgsz=" + imageSizeFilter;
+        }
+
+        if (!colorFilter.isEmpty()) {
+            searchUrl += "&imgcolor=" + colorFilter;
+        }
+
+        if (!imageTypeFilter.isEmpty()) {
+            searchUrl += "&imgtype=" + imageTypeFilter;
+        }
+
+        if (!siteFilter.isEmpty()) {
+            searchUrl += "&as_sitesearch=" + siteFilter;
+        }
 
         client.get(searchUrl, null, new JsonHttpResponseHandler() {
             @Override
@@ -102,6 +146,5 @@ public class SearchActivity extends ActionBarActivity {
                 Log.i("ERROR", "Failed to retrieve image list. Response: " + responseString);
             }
         });
-
     }
 }

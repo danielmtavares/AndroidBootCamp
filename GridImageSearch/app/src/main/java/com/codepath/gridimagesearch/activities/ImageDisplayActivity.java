@@ -1,4 +1,4 @@
-package com.codepath.gridimagesearch;
+package com.codepath.gridimagesearch.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.models.ImageResult;
 import com.squareup.picasso.Picasso;
 
