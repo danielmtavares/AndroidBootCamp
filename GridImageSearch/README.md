@@ -4,7 +4,7 @@ Project 2: Grid Image Search
 **Overview:** This is a Google Image Search app which allows a user to select search filters and
 paginate results infinitely.
 
-Time spent: 6 hours so far
+Time spent: 9 hours spent in total
 
 User Stories:
 -------------
@@ -20,7 +20,7 @@ The following user stories must be completed:
     - Site (espn.com)
 - [x] Subsequent searches will have any filters applied to the search results
 - [x] User can tap on any image in results to see the image full-screen
-- [ ] User can scroll down "infinitely" to continue loading more image results (up to 8 pages)
+- [x] User can scroll down "infinitely" to continue loading more image results (up to 8 pages)
 
 The following advanced user stories are optional:
 

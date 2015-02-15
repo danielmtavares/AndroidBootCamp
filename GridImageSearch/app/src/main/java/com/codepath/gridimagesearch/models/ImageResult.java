@@ -21,14 +21,6 @@ public class ImageResult implements Serializable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        /*
-        width, height, tbUrl, title, url
-        responseData => results => [x] => width
-        responseData => results => [x] => height
-        responseData => results => [x] => tbUrl
-        responseData => results => [x] => title
-        responseData => results => [x] => url
-         */
     }
 
     public static ArrayList<ImageResult> fromJSONArray(JSONArray array) {

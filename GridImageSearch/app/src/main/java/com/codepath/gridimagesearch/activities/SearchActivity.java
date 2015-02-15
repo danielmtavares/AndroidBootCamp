@@ -13,6 +13,7 @@ import android.widget.GridView;
 
 import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.adapters.ImageResultsAdapter;
+import com.codepath.gridimagesearch.helpers.EndlessScrollListener;
 import com.codepath.gridimagesearch.models.ImageResult;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -35,6 +36,7 @@ public class SearchActivity extends ActionBarActivity {
     private String colorFilter;
     private String imageTypeFilter;
     private String siteFilter;
+    private JSONObject cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,28 @@ public class SearchActivity extends ActionBarActivity {
                 startActivity(i);
             }
         });
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                loadMoreImages(page - 1);
+            }
+        });
+    }
+
+    // Append more data into the adapter
+    private void loadMoreImages(int page) {
+        if (cursor == null) {
+            return;
+        }
+        try {
+            JSONArray pages = cursor.getJSONArray("pages");
+            if (page < pages.length()) {
+                String startPage = pages.getJSONObject(page).getString("start");
+                performSearch(startPage);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -106,13 +130,12 @@ public class SearchActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onImageSearch(View view) {
+    private void performSearch(String startPage) {
         String query = etQuery.getText().toString();
         if (query.isEmpty()) {
             return;
         }
 
-        AsyncHttpClient client = new AsyncHttpClient();
         String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0" +
                 "&q=" + query + "&rsz=8";
 
@@ -132,12 +155,17 @@ public class SearchActivity extends ActionBarActivity {
             searchUrl += "&as_sitesearch=" + siteFilter;
         }
 
+        searchUrl += "&start=" + startPage;
+
+        AsyncHttpClient client = new AsyncHttpClient();
         client.get(searchUrl, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    JSONArray imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                    imageResults.clear();
+                    JSONObject responseData = response.getJSONObject("responseData");
+                    cursor = responseData.getJSONObject("cursor");
+
+                    JSONArray imageResultsJson = responseData.getJSONArray("results");
                     imageResults.addAll(ImageResult.fromJSONArray(imageResultsJson));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -151,5 +179,11 @@ public class SearchActivity extends ActionBarActivity {
                 Log.i("ERROR", "Failed to retrieve image list. Response: " + responseString);
             }
         });
+    }
+
+    public void onImageSearch(View view) {
+        imageResults.clear();
+        aImageResults.notifyDataSetChanged();
+        performSearch("0");
     }
 }
