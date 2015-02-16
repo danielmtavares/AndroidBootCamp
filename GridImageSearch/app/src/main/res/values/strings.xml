@@ -4,6 +4,8 @@
     <string name="app_name">Google Image Searcher</string>
     <string name="action_preferences">Settings</string>
     <string name="action_search">Search</string>
+    <string name="action_share">Share</string>
+    <string name="share_activity_title">Share Image</string>
     <string name="image_title_label">Image Title</string>
     <string name="image_view_content_description">Image Result</string>
     <string name="title_activity_image_display">Full Image</string>

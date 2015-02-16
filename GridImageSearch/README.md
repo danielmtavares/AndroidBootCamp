@@ -4,7 +4,7 @@ Project 2: Grid Image Search
 **Overview:** This is a Google Image Search app which allows a user to select search filters and
 paginate results infinitely.
 
-Time spent: 12 hours spent in total
+Time spent: 13 hours spent in total
 
 User Stories:
 -------------
@@ -26,7 +26,7 @@ The following advanced user stories are optional:
 
 - [x] Advanced: Robust error handling, check if internet is available, handle error cases, network failures
 - [x] Advanced: Use the ActionBar SearchView or custom layout as the query box instead of an EditText
-- [ ] Advanced: User can share an image to their friends or email it to themselves
+- [x] Advanced: User can share an image to their friends or email it to themselves
 - [ ] Advanced: Replace Filter Settings Activity with a lightweight modal overlay
 - [ ] Advanced: Improve the user interface and experiment with image assets and/or styling and coloring
 - [ ] Bonus: Use the StaggeredGridView to display improve the grid of image results
