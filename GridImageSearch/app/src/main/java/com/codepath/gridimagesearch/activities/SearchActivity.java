@@ -3,6 +3,8 @@ package com.codepath.gridimagesearch.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.adapters.ImageResultsAdapter;
@@ -78,6 +81,13 @@ public class SearchActivity extends ActionBarActivity {
                 loadMoreImages(page - 1);
             }
         });
+    }
+
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
     // Append more data into the adapter
@@ -160,6 +170,11 @@ public class SearchActivity extends ActionBarActivity {
     }
 
     private void performSearch(String startPage) {
+        if (!isNetworkAvailable()) {
+            Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (queryString.isEmpty()) {
             return;
         }
