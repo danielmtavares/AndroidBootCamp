@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="image_sizes">
+        <item>all</item>
+        <item>icon</item>
+        <item>small</item>
+        <item>medium</item>
+        <item>large</item>
+    </string-array>
+    <string-array name="color_filters">
+        <item>all</item>
+        <item>black</item>
+        <item>blue</item>
+        <item>green</item>
+    </string-array>
+    <string-array name="image_types">
+        <item>all</item>
+        <item>face</item>
+        <item>photo</item>
+        <item>clipart</item>
+        <item>lineart</item>
+    </string-array>
+</resources>
