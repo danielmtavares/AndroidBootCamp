@@ -1,6 +1,8 @@
 package com.codepath.gridimagesearch.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.GridView;
 import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.adapters.ImageResultsAdapter;
 import com.codepath.gridimagesearch.helpers.EndlessScrollListener;
+import com.codepath.gridimagesearch.helpers.SearchFilter;
 import com.codepath.gridimagesearch.models.ImageResult;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -47,10 +50,13 @@ public class SearchActivity extends ActionBarActivity {
         aImageResults = new ImageResultsAdapter(this, imageResults);
         gvResults.setAdapter(aImageResults);
 
-        imageSizeFilter = "";
-        colorFilter = "";
-        imageTypeFilter = "";
-        siteFilter = "";
+        SharedPreferences preferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+        // Read filter settings from preferences
+        imageSizeFilter = preferences.getString(SearchFilter.IMAGE_SIZE, "");
+        colorFilter = preferences.getString(SearchFilter.COLOR, "");
+        imageTypeFilter = preferences.getString(SearchFilter.IMAGE_TYPE, "");
+        siteFilter = preferences.getString(SearchFilter.SITE, "");
     }
 
     private void setupViews() {
@@ -93,11 +99,22 @@ public class SearchActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_FILTERS) {
             Bundle extras = data.getExtras();
+            SharedPreferences.Editor preferenceEditor = getSharedPreferences(getPackageName(),
+                    Context.MODE_PRIVATE).edit();
 
-            imageSizeFilter = extras.getString("image_size");
-            colorFilter = extras.getString("color_filter");
-            imageTypeFilter = extras.getString("image_type");
-            siteFilter = extras.getString("site_filter");
+            imageSizeFilter = extras.getString(SearchFilter.IMAGE_SIZE);
+            preferenceEditor.putString(SearchFilter.IMAGE_SIZE, imageSizeFilter);
+
+            colorFilter = extras.getString(SearchFilter.COLOR);
+            preferenceEditor.putString(SearchFilter.COLOR, colorFilter);
+
+            imageTypeFilter = extras.getString(SearchFilter.IMAGE_TYPE);
+            preferenceEditor.putString(SearchFilter.IMAGE_TYPE, imageTypeFilter);
+
+            siteFilter = extras.getString(SearchFilter.SITE);
+            preferenceEditor.putString(SearchFilter.SITE, siteFilter);
+
+            preferenceEditor.apply();
         }
     }
 
@@ -118,10 +135,10 @@ public class SearchActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(SearchActivity.this, AdvancedFiltersActivity.class);
-            intent.putExtra("image_size", imageSizeFilter);
-            intent.putExtra("color_filter", colorFilter);
-            intent.putExtra("image_type", imageTypeFilter);
-            intent.putExtra("site_filter", siteFilter);
+            intent.putExtra(SearchFilter.IMAGE_SIZE, imageSizeFilter);
+            intent.putExtra(SearchFilter.COLOR, colorFilter);
+            intent.putExtra(SearchFilter.IMAGE_TYPE, imageTypeFilter);
+            intent.putExtra(SearchFilter.SITE, siteFilter);
 
             startActivityForResult(intent, REQUEST_FILTERS);
             return true;

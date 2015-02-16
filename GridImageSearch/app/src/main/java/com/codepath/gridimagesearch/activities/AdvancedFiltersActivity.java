@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
 import com.codepath.gridimagesearch.R;
+import com.codepath.gridimagesearch.helpers.SearchFilter;
 
 
 public class AdvancedFiltersActivity extends ActionBarActivity {
@@ -23,16 +24,16 @@ public class AdvancedFiltersActivity extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
 
         Spinner spImageSizeFilter = (Spinner) findViewById(R.id.spImageSizeFilter);
-        setSpinnerToValue(spImageSizeFilter, extras.getString("image_size"));
+        setSpinnerToValue(spImageSizeFilter, extras.getString(SearchFilter.IMAGE_SIZE));
 
         Spinner spColorFilter = (Spinner) findViewById(R.id.spColorFilter);
-        setSpinnerToValue(spColorFilter, extras.getString("color_filter"));
+        setSpinnerToValue(spColorFilter, extras.getString(SearchFilter.COLOR));
 
         Spinner spImageTypeFilter = (Spinner) findViewById(R.id.spImageTypeFilter);
-        setSpinnerToValue(spImageTypeFilter, extras.getString("image_type"));
+        setSpinnerToValue(spImageTypeFilter, extras.getString(SearchFilter.IMAGE_TYPE));
 
         EditText etSiteFilter = (EditText) findViewById(R.id.etSiteFilter);
-        etSiteFilter.setText(extras.getString("site_filter"));
+        etSiteFilter.setText(extras.getString(SearchFilter.SITE));
     }
 
 
@@ -78,24 +79,24 @@ public class AdvancedFiltersActivity extends ActionBarActivity {
         if (spImageSizeFilter.getSelectedItemPosition() != 0) {
             imageSize = spImageSizeFilter.getSelectedItem().toString();
         }
-        data.putExtra("image_size", imageSize);
+        data.putExtra(SearchFilter.IMAGE_SIZE, imageSize);
 
         Spinner spColorFilter = (Spinner) findViewById(R.id.spColorFilter);
         String colorFilter = "";
         if (spColorFilter.getSelectedItemPosition() != 0) {
             colorFilter = spColorFilter.getSelectedItem().toString();
         }
-        data.putExtra("color_filter", colorFilter);
+        data.putExtra(SearchFilter.COLOR, colorFilter);
 
         Spinner spImageTypeFilter = (Spinner) findViewById(R.id.spImageTypeFilter);
         String imageType = "";
         if (spImageTypeFilter.getSelectedItemPosition() != 0) {
             imageType = spImageTypeFilter.getSelectedItem().toString();
         }
-        data.putExtra("image_type", imageType);
+        data.putExtra(SearchFilter.IMAGE_TYPE, imageType);
 
         EditText etSiteFilter = (EditText) findViewById(R.id.etSiteFilter);
-        data.putExtra("site_filter", etSiteFilter.getText().toString());
+        data.putExtra(SearchFilter.SITE, etSiteFilter.getText().toString());
 
         setResult(RESULT_OK, data);
         finish();
