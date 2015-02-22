@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.codepath.apps.twitterclient.activities.ComposeActivity">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -31,39 +32,19 @@
         android:id="@+id/tvScreenName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvName"
-        android:layout_alignParentTop="true"
-        android:layout_alignTop="@+id/tvName"
+        android:layout_below="@+id/tvName"
         android:layout_marginBottom="2dp"
-        android:layout_toRightOf="@+id/tvName"
+        android:layout_toRightOf="@+id/ivProfileImage"
         android:gravity="bottom"
         android:text="UserName goes here"
         android:textSize="10sp" />
 
-    <TextView
-        android:id="@+id/tvBody"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/edStatus"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ivProfileImage"
-        android:layout_toEndOf="@+id/ivProfileImage"
-        android:layout_toRightOf="@+id/ivProfileImage"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="Tweet body goes here" />
-
-    <TextView
-        android:id="@+id/tvTimestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvName"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignTop="@+id/tvName"
-        android:layout_marginBottom="3dp"
-        android:layout_marginTop="3dp"
-        android:gravity="center_horizontal"
-        android:text="30m"
-        android:textSize="10sp" />
+        android:layout_below="@+id/ivProfileImage"
+        android:hint="@string/compose_tweet_hint"
+        android:maxLength="140" />
 
 </RelativeLayout>

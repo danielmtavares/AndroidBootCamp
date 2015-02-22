@@ -2,7 +2,6 @@ package com.codepath.apps.twitterclient.models;
 
 import android.content.Context;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,21 +14,12 @@ import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 // Taking the Tweet objects and turning them into Views displayed in the list
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     final static String TWITTER_TIMESTAMP_FORMAT = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-
-    private static class ViewHolder {
-        ImageView ivProfileImage;
-        TextView tvName;
-        TextView tvUserName;
-        TextView tvBody;
-        TextView tvTimestamp;
-    }
 
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
         super(context, android.R.layout.simple_list_item_1, tweets);
@@ -50,7 +40,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             // Find the subviews to fill with data in the template
             viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
             viewHolder.tvName = (TextView) convertView.findViewById(R.id.tvName);
-            viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
+            viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tvScreenName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
             viewHolder.tvTimestamp = (TextView) convertView.findViewById(R.id.tvTimestamp);
             convertView.setTag(viewHolder);
@@ -87,5 +77,13 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         }
 
         return relativeDate;
+    }
+
+    private static class ViewHolder {
+        ImageView ivProfileImage;
+        TextView tvName;
+        TextView tvUserName;
+        TextView tvBody;
+        TextView tvTimestamp;
     }
 }

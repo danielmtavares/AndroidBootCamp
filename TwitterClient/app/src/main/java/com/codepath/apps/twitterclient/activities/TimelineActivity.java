@@ -1,10 +1,11 @@
-package com.codepath.apps.twitterclient.activity;
+package com.codepath.apps.twitterclient.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,9 +27,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class TimelineActivity extends ActionBarActivity {
-
-    private static final String TAG = "TwitterClient";
-
+    private static final int COMPOSE_TWEET = 111;
     private TwitterClient client;
     private ArrayList<Tweet> tweets;
     private TweetsArrayAdapter aTweets;
@@ -48,7 +47,7 @@ public class TimelineActivity extends ActionBarActivity {
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                Log.d(TimelineActivity.TAG, "load more tweets");
+                Log.d(TwitterApplication.TAG, "load more tweets");
                 populateTimeline();
             }
         });
@@ -71,8 +70,9 @@ public class TimelineActivity extends ActionBarActivity {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.e(TimelineActivity.TAG, errorResponse.toString());
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable,
+                                  JSONObject errorResponse) {
+                Log.e(TwitterApplication.TAG, errorResponse.toString());
             }
         });
     }
@@ -99,10 +99,19 @@ public class TimelineActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.compose_tweet) {
+            Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
+            startActivityForResult(intent, COMPOSE_TWEET);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == COMPOSE_TWEET) {
+            populateTimeline();
+        }
     }
 }

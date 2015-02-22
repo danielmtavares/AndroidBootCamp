@@ -1,15 +1,15 @@
 package com.codepath.apps.twitterclient;
 
-import org.scribe.builder.api.Api;
-import org.scribe.builder.api.FlickrApi;
-import org.scribe.builder.api.TwitterApi;
-
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.scribe.builder.api.Api;
+import org.scribe.builder.api.TwitterApi;
 
 /*
  * 
@@ -29,6 +29,7 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String REST_CONSUMER_KEY = "w7TNjEVTd72nJnbch1oniFCjt";
 	public static final String REST_CONSUMER_SECRET = "l1ppwDNT4X4N4SMd8NbE8o7T0hr9nO2DGLs5hDymzf1GbtYZb9";
 	public static final String REST_CALLBACK_URL = "oauth://cpsimpletweets"; // Change this (here and in manifest)
+    private static final int STATUS_LIMIT = 140;
 
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
@@ -46,5 +47,29 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(apiUrl, params, handler);
     }
 
-    // TODO: implement compose tweet
+    // Updates the authenticating user’s current status, also known as tweeting.
+    //
+    // POST https://api.twitter.com/1.1/statuses/update.json
+    // status=<message_to_be_sent>
+    public void postStatusUpdate(String status, AsyncHttpResponseHandler handler) {
+        if (status.length() > STATUS_LIMIT) {
+            Log.e(TwitterApplication.TAG, "Failed to post update. Exceeded status limit of " +
+                    TwitterClient.STATUS_LIMIT + " characters");
+            return;
+        }
+
+        String apiUrl = getApiUrl("statuses/update.json");
+        RequestParams params = new RequestParams();
+        params.put("status", status);
+
+        getClient().post(apiUrl, params, handler);
+    }
+
+    public void verifyCredentials(AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("account/verify_credentials.json");
+        RequestParams params = new RequestParams();
+        params.put("skip_status", "true");
+
+        getClient().get(apiUrl, params, handler);
+    }
 }

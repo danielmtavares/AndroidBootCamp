@@ -1,14 +1,13 @@
-package com.codepath.apps.twitterclient.activity;
+package com.codepath.apps.twitterclient.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Toast;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterClient;
+import com.codepath.apps.twitterclient.models.CurrentUser;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
@@ -31,7 +30,8 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	// i.e Display application "homepage"
 	@Override
 	public void onLoginSuccess() {
-		Intent i = new Intent(this, TimelineActivity.class);
+        CurrentUser.verifyCredentials();
+        Intent i = new Intent(this, TimelineActivity.class);
 		startActivity(i);
 	}
 
