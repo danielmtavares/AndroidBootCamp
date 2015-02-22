@@ -22,6 +22,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class TimelineActivity extends ActionBarActivity {
         lvTweets.setAdapter(aTweets);
         client = TwitterApplication.getRestClient();
 
-        lvTweets.setOnScrollListener(new EndlessScrollListener() {
+        lvTweets.setOnScrollListener(new EndlessScrollListener(20) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 Log.d(TwitterApplication.TAG, "load more tweets");
@@ -73,6 +74,21 @@ public class TimelineActivity extends ActionBarActivity {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable,
                                   JSONObject errorResponse) {
                 Log.e(TwitterApplication.TAG, errorResponse.toString());
+
+                try {
+                    JSONArray errors = errorResponse.getJSONArray("errors");
+
+                    for (int i = 0; i < errors.length(); ++i) {
+                        JSONObject error= errors.getJSONObject(i);
+                        int errorCode = error.getInt("code");
+                        String message = error.getString("message");
+
+                        Log.e(TwitterApplication.TAG, "Error (" + errorCode + "): " + message);
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

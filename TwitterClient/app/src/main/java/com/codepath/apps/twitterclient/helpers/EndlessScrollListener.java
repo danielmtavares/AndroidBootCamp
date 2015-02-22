@@ -15,7 +15,8 @@ public abstract class EndlessScrollListener implements AbsListView.OnScrollListe
     // Sets the starting page index
     private int startingPageIndex = 0;
 
-    public EndlessScrollListener() {
+    public EndlessScrollListener(int visibleThreshold) {
+        this.visibleThreshold = visibleThreshold;
     }
 
     // This happens many times a second during a scroll, so be wary of the code you place here.
