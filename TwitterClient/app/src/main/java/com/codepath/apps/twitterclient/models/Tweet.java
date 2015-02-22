@@ -106,6 +106,7 @@ public class Tweet {
     private long uid;
     private User user;
     private String createdAt;
+    private static long sinceId = 1;
 
     public String getBody() {
         return body;
@@ -123,6 +124,10 @@ public class Tweet {
         return createdAt;
     }
 
+    public static long getSinceId() {
+        return sinceId;
+    }
+
     // Deserialize the json and build Tweet objects
     // Tweet.fromJson("{...}") => <Tweet>
     public static Tweet fromJSON(JSONObject jsonObject) {
@@ -135,6 +140,8 @@ public class Tweet {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        Tweet.sinceId = Math.max(tweet.uid, Tweet.sinceId);
         return tweet;
     }
 
