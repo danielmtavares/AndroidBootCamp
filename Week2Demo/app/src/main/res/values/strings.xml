@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Week2Demo</string>
+    <string name="action_settings">Settings</string>
+    <string name="create">Settings</string>
+    <string name="title_activity_request">RequestActivity</string>
+    <string name="hello_world">Hello world!</string>
+
+</resources>
