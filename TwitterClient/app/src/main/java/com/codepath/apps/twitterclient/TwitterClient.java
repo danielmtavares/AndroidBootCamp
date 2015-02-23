@@ -49,6 +49,17 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(apiUrl, params, handler);
     }
 
+    // GET https://api.twitter.com/1.1/statuses/home_timeline.json
+    public void refreshTimeline(long sinceId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/home_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 20);
+        params.put("since_id", sinceId);
+        params.put("exclude_replies", true);
+
+        getClient().get(apiUrl, params, handler);
+    }
+
     // Updates the authenticating user’s current status, also known as tweeting.
     //
     // POST https://api.twitter.com/1.1/statuses/update.json
