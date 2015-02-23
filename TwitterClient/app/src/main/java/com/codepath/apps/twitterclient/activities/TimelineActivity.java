@@ -64,7 +64,13 @@ public class TimelineActivity extends ActionBarActivity {
             return;
         }
 
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        long maxId = 0;
+        if (!tweets.isEmpty()) {
+            Tweet tweet = tweets.get(tweets.size() - 1);
+            maxId = tweet.getUid();
+        }
+
+        client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 aTweets.addAll(Tweet.fromJSONArray(response));
