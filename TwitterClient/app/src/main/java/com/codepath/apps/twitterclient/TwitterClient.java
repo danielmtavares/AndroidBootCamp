@@ -3,7 +3,6 @@ package com.codepath.apps.twitterclient;
 import android.content.Context;
 import android.util.Log;
 
-import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -24,16 +23,16 @@ import org.scribe.builder.api.TwitterApi;
  * 
  */
 public class TwitterClient extends OAuthBaseClient {
-	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
-	public static final String REST_URL = "https://api.twitter.com/1.1";
-	public static final String REST_CONSUMER_KEY = "w7TNjEVTd72nJnbch1oniFCjt";
-	public static final String REST_CONSUMER_SECRET = "l1ppwDNT4X4N4SMd8NbE8o7T0hr9nO2DGLs5hDymzf1GbtYZb9";
-	public static final String REST_CALLBACK_URL = "oauth://cpsimpletweets"; // Change this (here and in manifest)
+    public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
+    public static final String REST_URL = "https://api.twitter.com/1.1";
+    public static final String REST_CONSUMER_KEY = "w7TNjEVTd72nJnbch1oniFCjt";
+    public static final String REST_CONSUMER_SECRET = "l1ppwDNT4X4N4SMd8NbE8o7T0hr9nO2DGLs5hDymzf1GbtYZb9";
+    public static final String REST_CALLBACK_URL = "oauth://cpsimpletweets"; // Change this (here and in manifest)
     private static final int STATUS_LIMIT = 140;
 
-	public TwitterClient(Context context) {
-		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
-	}
+    public TwitterClient(Context context) {
+        super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
+    }
 
     // GET https://api.twitter.com/1.1/statuses/home_timeline.json
     // count=25

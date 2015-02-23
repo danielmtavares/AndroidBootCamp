@@ -3,6 +3,8 @@ package com.codepath.apps.twitterclient.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /*
 "user": {
         "name": "OAuth Dancer",
@@ -62,28 +64,12 @@ import org.json.JSONObject;
         },
 */
 
-public class User {
+public class User implements Serializable {
     // list attributes
     private String name;
     private long uid;
     private String screenName;
     private String profileImageUrl;
-
-    public String getName() {
-        return name;
-    }
-
-    public long getUid() {
-        return uid;
-    }
-
-    public String getScreenName() {
-        return screenName;
-    }
-
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
 
     // deserialize the user from json => User
     public static User fromJSON(JSONObject jsonObject) {
@@ -97,5 +83,17 @@ public class User {
             e.printStackTrace();
         }
         return user;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 }

@@ -127,7 +127,9 @@ public class TimelineActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == COMPOSE_TWEET) {
-            populateTimeline();
+            Bundle extras = data.getExtras();
+            Tweet tweet = (Tweet) extras.getSerializable("tweet");
+            aTweets.insert(tweet, 0);
         }
     }
 }

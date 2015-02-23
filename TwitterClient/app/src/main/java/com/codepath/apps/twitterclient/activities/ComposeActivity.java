@@ -1,5 +1,6 @@
 package com.codepath.apps.twitterclient.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -19,7 +20,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ComposeActivity extends ActionBarActivity {
@@ -80,7 +80,12 @@ public class ComposeActivity extends ActionBarActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Toast.makeText(getApplicationContext(), "Status update posted!",
                         Toast.LENGTH_SHORT).show();
-                setResult(RESULT_OK);
+                Tweet tweet = Tweet.fromJSON(response);
+
+                Intent data = new Intent();
+                data.putExtra("tweet", tweet);
+
+                setResult(RESULT_OK, data);
                 finish();
             }
 

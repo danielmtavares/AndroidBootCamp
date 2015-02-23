@@ -97,36 +97,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 // Parse the json and store the data, encapsulate state logic or display logic
-public class Tweet {
+public class Tweet implements Serializable {
     private String body;
     // unique id for the tweet
     private long uid;
     private User user;
     private String createdAt;
-    private static long sinceId = 1;
-
-    public String getBody() {
-        return body;
-    }
-
-    public long getUid() {
-        return uid;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public static long getSinceId() {
-        return sinceId;
-    }
 
     // Deserialize the json and build Tweet objects
     // Tweet.fromJson("{...}") => <Tweet>
@@ -141,7 +121,6 @@ public class Tweet {
             e.printStackTrace();
         }
 
-        Tweet.sinceId = Math.max(tweet.uid, Tweet.sinceId);
         return tweet;
     }
 
@@ -157,9 +136,24 @@ public class Tweet {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                continue;
             }
         }
         return tweets;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
     }
 }
