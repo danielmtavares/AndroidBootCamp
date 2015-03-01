@@ -4,8 +4,9 @@
     tools:context="com.codepath.apps.twitterclient.activities.TimelineActivity">
 
     <item
-        android:id="@+id/compose_tweet"
-        android:icon="@drawable/ic_tweet"
-        android:title="@string/action_compose"
-        app:showAsAction="ifRoom|collapseActionView" />
+        android:id="@+id/miProfile"
+        android:icon="@drawable/ic_profile"
+        android:onClick="onProfileView"
+        android:title="Profile"
+        app:showAsAction="ifRoom" />
 </menu>

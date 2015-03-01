@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
@@ -52,7 +53,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.codepath.apps.twitterclient.activities.LoginActivity" />
-            </activity>
+        </activity>
         <activity
             android:name=".activities.ComposeActivity"
             android:label="@string/title_activity_compose">
@@ -64,6 +65,10 @@
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.codepath.apps.twitterclient.activities.LoginActivity" />
+
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:label="@string/title_activity_profile" />
     </application>
 
 </manifest>
