@@ -59,5 +59,8 @@ Optional Advanced User Stories:
 Walkthrough of all User Stories:
 -------------------------------
 
+Project 3:
 ![](Walkthrough.gif)
+
+Project 4:
 ![](Walkthrough2.gif)
