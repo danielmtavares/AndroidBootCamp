@@ -1,4 +1,4 @@
-Project 3: Twitter Client
+Project 3 and 4: Twitter Client
 -------------------------
 
 **Overview:** This is a Twitter client that supports viewing a Twitter timeline and composing a new tweet.
