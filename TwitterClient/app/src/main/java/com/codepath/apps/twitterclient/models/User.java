@@ -67,7 +67,6 @@ import java.io.Serializable;
 public class User implements Serializable {
     // list attributes
     private String name;
-    private long uid;
     private String screenName;
     private String profileImageUrl;
     private String tagline;
@@ -79,7 +78,6 @@ public class User implements Serializable {
         User user = new User();
         try {
             user.name = jsonObject.getString("name");
-            user.uid = jsonObject.getLong("id");
             user.screenName = jsonObject.getString("screen_name");
             user.tagline = jsonObject.getString("description");
             user.followersCount = jsonObject.getInt("followers_count");

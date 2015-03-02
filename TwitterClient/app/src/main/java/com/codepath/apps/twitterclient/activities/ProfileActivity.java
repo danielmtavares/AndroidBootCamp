@@ -3,6 +3,7 @@ package com.codepath.apps.twitterclient.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -17,9 +18,12 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ProfileActivity extends ActionBarActivity {
+    public static final String SCREEN_NAME = "screen_name";
     TwitterClient client;
     User user;
 
@@ -27,27 +31,47 @@ public class ProfileActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        client = TwitterApplication.getRestClient();
-        // Get account info
-        client.getUserInfo(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                user = User.fromJSON(response);
-                // My current user account's info
-                getSupportActionBar().setTitle("@" + user.getScreenName());
-                populateProfileHeader(user);
-            }
-        });
 
-
-        // Get the screen name from the activity that launches this
         if (savedInstanceState == null) {
-            String screenName = getIntent().getStringExtra("screen_name");
-            UserTimelineFragment fragment = UserTimelineFragment.newInstance(screenName);
-            // Display user timeline fragment within this activity (dynamically)
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.flContainer, fragment);
-            ft.commit(); // changes the fragment
+            String screenName = getIntent().getStringExtra(ProfileActivity.SCREEN_NAME);
+
+            client = TwitterApplication.getRestClient();
+
+            // Get account info
+            client.getUserInfo(screenName, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    user = User.fromJSON(response);
+                    // My current user account's info
+                    getSupportActionBar().setTitle("@" + user.getScreenName());
+                    populateProfileHeader(user);
+
+                    // Display the user's timeline
+                    UserTimelineFragment fragment = UserTimelineFragment.newInstance(user.getScreenName());
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.flContainer, fragment);
+                    ft.commit();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.e(TwitterApplication.TAG, "Failed to get user info");
+
+                    try {
+                        JSONArray errors = errorResponse.getJSONArray("errors");
+
+                        for (int i = 0; i < errors.length(); i++) {
+                            JSONObject errorObject = errors.getJSONObject(i);
+                            Log.e(TwitterApplication.TAG, "Error(" + errorObject.getInt("code") +
+                                    "): " + errorObject.getString("message"));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+            Log.d(TwitterApplication.TAG, "Activity is being reinitialized");
         }
     }
 

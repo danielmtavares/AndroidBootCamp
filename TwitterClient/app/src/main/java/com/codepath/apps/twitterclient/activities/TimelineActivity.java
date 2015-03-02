@@ -17,6 +17,7 @@ import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.fragments.HomeTimelineFragment;
 import com.codepath.apps.twitterclient.fragments.MentionsTimelineFragment;
+import com.codepath.apps.twitterclient.models.CurrentUser;
 import com.codepath.apps.twitterclient.models.Tweet;
 
 import org.json.JSONArray;
@@ -70,6 +71,7 @@ public class TimelineActivity extends ActionBarActivity {
     public void onProfileView(MenuItem menuItem) {
         // Launch the profile view
         Intent i = new Intent(this, ProfileActivity.class);
+        i.putExtra(ProfileActivity.SCREEN_NAME, CurrentUser.getScreenName());
         startActivity(i);
     }
 

@@ -1,7 +1,9 @@
 package com.codepath.apps.twitterclient.models;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.twitterclient.R;
+import com.codepath.apps.twitterclient.TwitterApplication;
+import com.codepath.apps.twitterclient.activities.ProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -31,7 +35,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         Tweet tweet = getItem(position);
 
         // Find or inflate the template
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -58,6 +62,20 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
         Picasso.with(getContext()).load(user.getProfileImageUrl()).into(viewHolder.ivProfileImage);
+
+        viewHolder.ivProfileImage.setTag(tweet.getUser().getScreenName());
+        viewHolder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // REMOVE
+                Log.d(TwitterApplication.TAG, viewHolder.ivProfileImage.getTag().toString() + "profile image clicked");
+
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                intent.putExtra(ProfileActivity.SCREEN_NAME,
+                        viewHolder.ivProfileImage.getTag().toString());
+                getContext().startActivity(intent);
+            }
+        });
 
         // Return the view to be inserted into the list
         return convertView;

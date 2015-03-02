@@ -37,7 +37,6 @@ public class TweetsListFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
     private TwitterClient client;
 
-
     // inflation logic
 
     @Override

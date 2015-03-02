@@ -39,6 +39,7 @@ public class UserTimelineFragment extends TweetsListFragment {
     // Fill the listview by creating the tweet objects from the json
     private void populateTimeline() {
         if (!isNetworkAvailable()) {
+            // TODO: replace with interface method
             Toast.makeText(getActivity().getApplicationContext(), "Network is not available",
                     Toast.LENGTH_SHORT).show();
             return;
