@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.TwitterClient;
+import com.codepath.apps.twitterclient.fragments.TweetsListFragment;
 import com.codepath.apps.twitterclient.fragments.UserTimelineFragment;
 import com.codepath.apps.twitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -23,7 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ProfileActivity extends ActionBarActivity {
+public class ProfileActivity extends ActionBarActivity
+        implements TweetsListFragment.OnFailureListener {
     public static final String SCREEN_NAME = "screen_name";
     TwitterClient client;
     User user;
@@ -116,5 +118,11 @@ public class ProfileActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFailure(String message) {
+        Toast.makeText(getApplicationContext(), message,
+                Toast.LENGTH_SHORT).show();
     }
 }

@@ -76,10 +76,36 @@ public class MentionsTimelineFragment extends TweetsListFragment {
             return;
         }
 
-        client.getMentionsTimeline(new JsonHttpResponseHandler() {
+        long maxId = 0;
+        if (!tweets.isEmpty()) {
+            Tweet tweet = tweets.get(tweets.size() - 1);
+            maxId = tweet.getUid();
+        }
+
+        client.getMentionsTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                aTweets.addAll(Tweet.fromJSONArray(response));
+                ArrayList<Tweet> tweetsInResponse = Tweet.fromJSONArray(response);
+                ArrayList<Tweet> newTweets = new ArrayList<>();
+
+                if (tweets.size() > 0) {
+                    for (int i = 0; i < tweetsInResponse.size(); i++) {
+                        Tweet thisTweet = tweetsInResponse.get(i);
+                        Boolean isNewTweet = true;
+                        for (int j = 0; j < tweets.size(); j++) {
+                            if (thisTweet.getUid() == tweets.get(j).getUid()) {
+                                isNewTweet = false;
+                                break;
+                            }
+                        }
+                        if (isNewTweet) {
+                            newTweets.add(thisTweet);
+                        }
+                    }
+                    aTweets.addAll(newTweets);
+                } else {
+                    aTweets.addAll(tweetsInResponse);
+                }
             }
 
             @Override
