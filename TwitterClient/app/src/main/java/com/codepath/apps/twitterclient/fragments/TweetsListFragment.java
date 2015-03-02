@@ -1,8 +1,5 @@
 package com.codepath.apps.twitterclient.fragments;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
@@ -20,39 +16,38 @@ import com.codepath.apps.twitterclient.TwitterClient;
 import com.codepath.apps.twitterclient.helpers.EndlessScrollListener;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.TweetsArrayAdapter;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TweetsListFragment extends Fragment {
     public ArrayList<Tweet> tweets;
-    private TweetsArrayAdapter aTweets;
+    protected TweetsArrayAdapter aTweets;
+    protected SwipeRefreshLayout swipeContainer;
+    protected TwitterClient client;
+    protected OnFailureListener failureListener;
     private ListView lvTweets;
-    private SwipeRefreshLayout swipeContainer;
-    private TwitterClient client;
+    private SwipeRefreshLayout.OnRefreshListener refreshListener;
+    private EndlessScrollListener scrollListener;
 
-    // inflation logic
+    public void setRefreshListener(SwipeRefreshLayout.OnRefreshListener refreshListener) {
+        this.refreshListener = refreshListener;
+    }
+
+    public void setScrollListener(EndlessScrollListener scrollListener) {
+        this.scrollListener = scrollListener;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tweets_list, container, false);
 
-        client = TwitterApplication.getRestClient();
-
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-//                refreshTimeline();
-            }
-        });
+        swipeContainer.setOnRefreshListener(refreshListener);
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -61,14 +56,7 @@ public class TweetsListFragment extends Fragment {
 
         lvTweets = (ListView) view.findViewById(R.id.lvTweets);
         lvTweets.setAdapter(aTweets);
-
-        lvTweets.setOnScrollListener(new EndlessScrollListener(20) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                Log.d(TwitterApplication.TAG, "load more tweets");
-//                populateTimeline();
-            }
-        });
+        lvTweets.setOnScrollListener(scrollListener);
 
         return view;
     }
@@ -78,48 +66,14 @@ public class TweetsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        client = TwitterApplication.getRestClient();
+
         tweets = new ArrayList<>();
         aTweets = new TweetsArrayAdapter(getActivity(), tweets);
     }
 
-    public void addAll(List<Tweet> tweets) {
-        aTweets.addAll(tweets);
-    }
-
-    private Boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-
-    private void refreshTimeline() {
-        if (!isNetworkAvailable()) {
-            Toast.makeText(getActivity().getApplicationContext(), "Network is not available",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        long sinceId = (!aTweets.isEmpty()) ? aTweets.getItem(0).getUid() : 1;
-
-        client.refreshTimeline(sinceId, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                ArrayList<Tweet> newTweets = Tweet.fromJSONArray(response);
-                newTweets.addAll(tweets);
-
-                aTweets.clear();
-                aTweets.addAll(newTweets);
-                swipeContainer.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                  JSONObject errorResponse) {
-                handleFailure(errorResponse);
-                swipeContainer.setRefreshing(false);
-            }
-        });
+    public void insert(Tweet tweet, int index) {
+        aTweets.insert(tweet, index);
     }
 
     protected void handleFailure(JSONObject errorResponse) {
@@ -134,11 +88,16 @@ public class TweetsListFragment extends Fragment {
                 String message = error.getString("message");
 
                 Log.e(TwitterApplication.TAG, "Error (" + errorCode + "): " + message);
-                Toast.makeText(getActivity().getApplicationContext(), message,
-                        Toast.LENGTH_SHORT).show();
+                if (failureListener != null) {
+                    failureListener.onFailure(message);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public interface OnFailureListener {
+        public void onFailure(String errorMessage);
     }
 }

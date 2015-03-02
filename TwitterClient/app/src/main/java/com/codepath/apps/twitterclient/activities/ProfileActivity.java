@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
@@ -32,10 +33,16 @@ public class ProfileActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        if (savedInstanceState == null) {
-            String screenName = getIntent().getStringExtra(ProfileActivity.SCREEN_NAME);
+        client = TwitterApplication.getRestClient();
 
-            client = TwitterApplication.getRestClient();
+        if (savedInstanceState == null) {
+            if (!TwitterApplication.isNetworkAvailable(this)) {
+                Toast.makeText(getApplicationContext(), "Network is not available",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String screenName = getIntent().getStringExtra(ProfileActivity.SCREEN_NAME);
 
             // Get account info
             client.getUserInfo(screenName, new JsonHttpResponseHandler() {

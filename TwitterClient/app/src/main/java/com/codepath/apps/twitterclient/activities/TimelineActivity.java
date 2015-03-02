@@ -7,25 +7,28 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.codepath.apps.twitterclient.R;
-import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.fragments.HomeTimelineFragment;
 import com.codepath.apps.twitterclient.fragments.MentionsTimelineFragment;
+import com.codepath.apps.twitterclient.fragments.TweetsListFragment;
 import com.codepath.apps.twitterclient.models.CurrentUser;
 import com.codepath.apps.twitterclient.models.Tweet;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class TimelineActivity extends ActionBarActivity {
+public class TimelineActivity extends ActionBarActivity
+        implements TweetsListFragment.OnFailureListener {
     private static final int COMPOSE_TWEET = 111;
+    private final HomeTimelineFragment homeTimelineFragment;
+    private final MentionsTimelineFragment mentionsTimelineFragment;
+
+    public TimelineActivity() {
+        homeTimelineFragment = new HomeTimelineFragment();
+        mentionsTimelineFragment = new MentionsTimelineFragment();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,25 +43,6 @@ public class TimelineActivity extends ActionBarActivity {
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         // Attach the tabstrip to the viewpager
         tabStrip.setViewPager(viewPager);
-    }
-
-    private void handleFailure(JSONObject errorResponse) {
-        Log.e(TwitterApplication.TAG, errorResponse.toString());
-
-        try {
-            JSONArray errors = errorResponse.getJSONArray("errors");
-
-            for (int i = 0; i < errors.length(); ++i) {
-                JSONObject error = errors.getJSONObject(i);
-                int errorCode = error.getInt("code");
-                String message = error.getString("message");
-
-                Log.e(TwitterApplication.TAG, "Error (" + errorCode + "): " + message);
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -85,8 +69,14 @@ public class TimelineActivity extends ActionBarActivity {
         if (resultCode == RESULT_OK && requestCode == COMPOSE_TWEET) {
             Bundle extras = data.getExtras();
             Tweet tweet = (Tweet) extras.getSerializable("tweet");
-//            aTweets.insert(tweet, 0);
+            homeTimelineFragment.insert(tweet, 0);
         }
+    }
+
+    @Override
+    public void onFailure(String message) {
+        Toast.makeText(getApplicationContext(), message,
+                Toast.LENGTH_SHORT).show();
     }
 
     // Return the order of the fragments in the view pager
@@ -102,9 +92,9 @@ public class TimelineActivity extends ActionBarActivity {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new HomeTimelineFragment();
+                return homeTimelineFragment;
             } else if (position == 1) {
-                return new MentionsTimelineFragment();
+                return mentionsTimelineFragment;
             } else {
                 return null;
             }

@@ -1,5 +1,6 @@
 package com.codepath.apps.twitterclient.models;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.codepath.apps.twitterclient.TwitterApplication;
@@ -34,7 +35,11 @@ public class CurrentUser {
         return profileImageUrl;
     }
 
-    public static void verifyCredentials() {
+    public static void verifyCredentials(Context context) {
+        if (!TwitterApplication.isNetworkAvailable(context)) {
+            return;
+        }
+
         TwitterClient client = TwitterApplication.getRestClient();
         client.verifyCredentials(new JsonHttpResponseHandler() {
             @Override
