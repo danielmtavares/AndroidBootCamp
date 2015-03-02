@@ -60,3 +60,4 @@ Walkthrough of all User Stories:
 -------------------------------
 
 ![](Walkthrough.gif)
+![](Walkthrough2.gif)
