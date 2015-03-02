@@ -3,7 +3,7 @@ Project 3 and 4: Twitter Client
 
 **Overview:** This is a Twitter client that supports viewing a Twitter timeline and composing a new tweet.
 
-**Time spent:** 16:00 hours spent in total (started at 1:00pm)
+**Time spent:** 23:00 hours spent in total.
 
 User Stories:
 -------------
