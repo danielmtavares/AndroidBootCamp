@@ -59,6 +59,11 @@ public class TimelineActivity extends ActionBarActivity
         startActivity(i);
     }
 
+    public void onComposeView(MenuItem menuItem) {
+        Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
+        startActivityForResult(intent, COMPOSE_TWEET);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
